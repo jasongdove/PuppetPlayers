@@ -167,7 +167,7 @@ object PuppetPlayerCommand: CommandTree {
     ): Int {
         val username = UsernameArgument.getUsername(context, "username")
         this.addFakePlayerOrThrow(context, username).thenApply { player ->
-            val level = dimension ?: player.serverLevel()
+            val level = dimension ?: player.level()
             val (x, y, z) = position
             val (yRot, xRot) = rotation ?: player.rotationVector
             if (gamemode != null) {

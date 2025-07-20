@@ -5,12 +5,14 @@ import me.senseiwells.puppet.action.PuppetPlayerActions
 import me.senseiwells.puppet.network.PuppetGamePacketListenerImpl
 import net.casual.arcade.npc.FakePlayer
 import net.casual.arcade.npc.network.FakeGamePacketListenerImpl
-import net.minecraft.nbt.CompoundTag
+import net.casual.arcade.utils.PlayerUtils.levelServer
 import net.minecraft.network.Connection
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.network.CommonListenerCookie
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
 import org.jetbrains.annotations.ApiStatus.Internal
 import kotlin.jvm.optionals.getOrNull
 
@@ -40,22 +42,22 @@ class PuppetPlayer @Internal constructor(
     override fun tick() {
         super.tick()
 
-        this.server.schedule(TickTask(this.server.tickCount) {
+        this.levelServer.schedule(TickTask(this.levelServer.tickCount) {
             // All player actions should be handled in the packet phase
             this.actions.tick()
         })
     }
 
-    override fun readAdditionalSaveData(compound: CompoundTag) {
-        super.readAdditionalSaveData(compound)
-        val packed = compound.read("fake_actions", PuppetPlayerActions.Packed.CODEC).getOrNull()
+    override fun readAdditionalSaveData(input: ValueInput) {
+        super.readAdditionalSaveData(input)
+        val packed = input.read("fake_actions", PuppetPlayerActions.Packed.CODEC).getOrNull()
         if (packed != null) {
             this.actions.unpack(packed)
         }
     }
 
-    override fun addAdditionalSaveData(compound: CompoundTag) {
-        super.addAdditionalSaveData(compound)
-        compound.store("fake_actions", PuppetPlayerActions.Packed.CODEC, this.actions.pack())
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        super.addAdditionalSaveData(output)
+        output.store("fake_actions", PuppetPlayerActions.Packed.CODEC, this.actions.pack())
     }
 }

@@ -9,10 +9,7 @@ import me.senseiwells.puppet.utils.PuppetPlayerRegistries
 import net.casual.arcade.commands.register
 import net.casual.arcade.events.GlobalEventHandler
 import net.casual.arcade.events.ListenerRegistry.Companion.register
-import net.casual.arcade.events.server.ServerLoadedEvent
-import net.casual.arcade.events.server.ServerRegisterCommandEvent
-import net.casual.arcade.events.server.ServerSaveEvent
-import net.casual.arcade.events.server.ServerStoppingEvent
+import net.casual.arcade.events.server.*
 import net.casual.arcade.npc.FakePlayer
 import net.fabricmc.api.ModInitializer
 import net.minecraft.core.UUIDUtil
@@ -42,7 +39,7 @@ object PuppetPlayers: ModInitializer {
         GlobalEventHandler.Server.register<ServerRegisterCommandEvent> { event ->
             event.register(PuppetPlayerCommand)
         }
-        GlobalEventHandler.Server.register<ServerLoadedEvent> { (server) ->
+        GlobalEventHandler.Server.register<ServerStartEvent> { (server) ->
             this.loadFakePlayers(server)
             if (this.config.useMineToolsApi) {
                 val repository = MineToolsGameProfileRepository(Proxy.NO_PROXY)
@@ -57,7 +54,7 @@ object PuppetPlayers: ModInitializer {
                 this.saveFakePlayers(server)
             }
         }
-        GlobalEventHandler.Server.register<ServerStoppingEvent> { (server) ->
+        GlobalEventHandler.Server.register<ServerStopEvent> { (server) ->
             this.saveFakePlayers(server)
             // We dc fake players here because luckperms is silly
             for (player in server.playerList.players.toList()) {

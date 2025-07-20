@@ -63,7 +63,7 @@ sealed class MoveToAction(
         jump: Boolean
     ): MoveToAction(sprint, jump) {
         override fun getTarget(player: PuppetPlayer): Vec3? {
-            val entity = player.serverLevel().getEntity(this.uuid)
+            val entity = player.level().getEntity(this.uuid)
             return entity?.position()
         }
     }
