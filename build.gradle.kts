@@ -20,7 +20,7 @@ repositories {
 }
 
 
-val modVersion = "1.0.3"
+val modVersion = "1.0.4"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -75,7 +75,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-                
+            Updated to 1.21.8 
             """.trimIndent()
         )
         type = STABLE
@@ -86,7 +86,7 @@ tasks {
 
         modrinth {
             accessToken = providers.environmentVariable("MODRINTH_API_KEY")
-            projectId = ""
+            projectId = "8fH4Iml8"
             minecraftVersions.add(libs.versions.minecraft)
 
             requires {
