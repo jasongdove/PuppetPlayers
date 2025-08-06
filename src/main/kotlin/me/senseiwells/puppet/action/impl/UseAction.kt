@@ -48,7 +48,7 @@ class UseAction(private val type: ActionModifier): PuppetPlayerAction {
             builder: LiteralArgumentBuilder<CommandSourceStack>,
             command: Command<CommandSourceStack>
         ) {
-            builder.argument("modifier", EnumArgument.enumeration<ActionModifier>()) {
+            builder.argument("modifier", EnumArgument.enumeration<ActionModifier> { it.serializedName }) {
                 executes(command)
             }
         }
