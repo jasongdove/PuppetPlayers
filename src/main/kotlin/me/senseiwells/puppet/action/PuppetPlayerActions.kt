@@ -77,6 +77,9 @@ class PuppetPlayerActions(
     }
 
     internal fun tick() {
+        this.attacking = this.attackingHeld
+        this.using = this.usingHeld
+
         this.hitResult = this.getHitResult()
 
         if (this.rightClickDelay > 0) {
@@ -225,18 +228,18 @@ class PuppetPlayerActions(
                             this.player.swing(hand)
                         }
                         return
+                    } else if (result is InteractionResult.Fail) {
+                        return
                     }
                 }
-                else -> {
-                    if (!stack.isEmpty) {
-                        val result = this.useItem(hand)
-                        if (result is InteractionResult.Success) {
-                            if (result.swingSource == InteractionResult.SwingSource.SERVER) {
-                                this.player.swing(hand)
-                            }
-                            return
-                        }
+            }
+            if (!stack.isEmpty) {
+                val result = this.useItem(hand)
+                if (result is InteractionResult.Success) {
+                    if (result.swingSource == InteractionResult.SwingSource.SERVER) {
+                        this.player.swing(hand)
                     }
+                    return
                 }
             }
         }

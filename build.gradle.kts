@@ -20,7 +20,7 @@ repositories {
 }
 
 
-val modVersion = "1.0.4"
+val modVersion = "1.0.5"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -75,7 +75,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            Updated to 1.21.8 
+            Fixes held use items not working properly
             """.trimIndent()
         )
         type = STABLE
