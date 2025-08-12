@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation
 
 class SneakAction(private val sneaking: Boolean): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
-        player.isShiftKeyDown = this.sneaking
+        player.moveControl.sneaking = this.sneaking
         return PuppetPlayerAction.Result.Complete
     }
 
