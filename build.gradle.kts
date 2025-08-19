@@ -20,7 +20,7 @@ repositories {
 }
 
 
-val modVersion = "1.0.7"
+val modVersion = "1.0.8"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -75,7 +75,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            Fixes puppets not sneaking properly
+            Fixes some performance issues with the move_to action
             """.trimIndent()
         )
         type = STABLE

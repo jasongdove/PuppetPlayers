@@ -26,18 +26,31 @@ sealed class MoveToAction(
     private val sprint: Boolean,
     private val jump: Boolean
 ): PuppetPlayerAction {
+    private var target: Vec3? = null
+
     abstract fun getTarget(player: PuppetPlayer): Vec3?
 
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
         val target = this.getTarget(player) ?: return PuppetPlayerAction.Result.Complete
+        val current = this.target
+
+        if (current != null && current.closerThan(target, 2.0)) {
+            if (player.navigation.isInProgress()) {
+                if (this.sprint) {
+                    player.moveControl.sprinting = true
+                }
+                if (this.jump) {
+                    player.moveControl.jump()
+                }
+                return PuppetPlayerAction.Result.Incomplete
+            }
+            this.target = null
+            return PuppetPlayerAction.Result.Complete
+        }
+
         val canNavigate = player.navigation.moveTo(target.x, target.y, target.z, 1.0)
         if (canNavigate) {
-            if (this.sprint) {
-                player.moveControl.sprinting = true
-            }
-            if (this.jump) {
-                player.moveControl.jump()
-            }
+            this.target = target
             return PuppetPlayerAction.Result.Incomplete
         }
         return PuppetPlayerAction.Result.Complete
