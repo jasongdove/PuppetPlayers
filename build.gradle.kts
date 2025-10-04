@@ -20,7 +20,7 @@ repositories {
 }
 
 
-val modVersion = "1.0.9-beta.1"
+val modVersion = "1.1.0"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -75,7 +75,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            Fixes some performance issues with the move_to action
+            - Updated to 1.21.9
             """.trimIndent()
         )
         type = STABLE
