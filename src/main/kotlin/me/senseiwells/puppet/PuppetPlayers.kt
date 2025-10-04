@@ -1,8 +1,7 @@
 package me.senseiwells.puppet
 
 import me.senseiwells.puppet.command.PuppetPlayerCommand
-import me.senseiwells.puppet.mixins.GameProfileCacheAccessor
-import me.senseiwells.puppet.mixins.MinecraftServerAccessor
+import me.senseiwells.puppet.mixins.CachedUserNameToIdResolverAccessor
 import me.senseiwells.puppet.mixins.ServicesAccessor
 import me.senseiwells.puppet.network.MineToolsGameProfileRepository
 import me.senseiwells.puppet.utils.PuppetPlayerRegistries
@@ -43,10 +42,10 @@ object PuppetPlayers: ModInitializer {
             this.loadFakePlayers(server)
             if (this.config.useMineToolsApi) {
                 val repository = MineToolsGameProfileRepository(Proxy.NO_PROXY)
-                val services = (server as MinecraftServerAccessor).services
+                val services = server.services()
                 @Suppress("CAST_NEVER_SUCCEEDS")
                 (services as ServicesAccessor).setProfileRepository(repository)
-                (services.profileCache as GameProfileCacheAccessor).setProfileRepository(repository)
+                (services.nameToIdCache as CachedUserNameToIdResolverAccessor).setProfileRepository(repository)
             }
         }
         GlobalEventHandler.Server.register<ServerSaveEvent> { (server, stopping) ->

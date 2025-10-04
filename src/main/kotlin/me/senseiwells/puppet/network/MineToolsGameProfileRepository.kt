@@ -1,10 +1,11 @@
 package me.senseiwells.puppet.network
 
-import com.mojang.authlib.GameProfile
 import com.mojang.authlib.GameProfileRepository
 import com.mojang.authlib.ProfileLookupCallback
 import com.mojang.authlib.exceptions.MinecraftClientException
 import com.mojang.authlib.minecraft.client.MinecraftClient
+import com.mojang.authlib.yggdrasil.ProfileNotFoundException
+import com.mojang.authlib.yggdrasil.response.NameAndId
 import java.net.Proxy
 import java.net.URI
 import java.util.*
@@ -26,18 +27,19 @@ class MineToolsGameProfileRepository(proxy: Proxy): GameProfileRepository {
             this.nextQueryTime = System.currentTimeMillis() + QUERY_COOLDOWN
             val url = URI("https://api.minetools.eu/uuid/${name}").toURL()
             try {
-                val profile = this.client.get(url, GameProfile::class.java)
-                callback.onProfileLookupSucceeded(profile)
-            } catch (e: MinecraftClientException) {
+                val profile = this.client.get(url, NameAndId::class.java)
+                    ?: throw ProfileNotFoundException("Server did not find the request profile")
+                callback.onProfileLookupSucceeded(profile.name, profile.id)
+            } catch (e: Exception) {
                 callback.onProfileLookupFailed(name, e)
             }
         }
     }
 
-    override fun findProfileByName(name: String): Optional<GameProfile> {
+    override fun findProfileByName(name: String): Optional<NameAndId> {
         val url = URI("https://api.minetools.eu/uuid/${name}").toURL()
         try {
-            return Optional.ofNullable(this.client.get(url, GameProfile::class.java))
+            return Optional.ofNullable(this.client.get(url, NameAndId::class.java))
         } catch (_: MinecraftClientException) {
 
         }
