@@ -20,7 +20,7 @@ repositories {
 }
 
 
-val modVersion = "1.1.1-beta.1"
+val modVersion = "1.2.0"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -75,11 +75,8 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            - Fix an issue with player's inventories not loading
-              - This is a temporary fix, and player spawning is *not* consistent
-                with vanilla player spawning, i.e. chunks are not loaded prior to
-                the player spawning into the world, and the player may not
-                be put at world spawn when joining for the first time.
+            - Properly fixed fake player loading
+            - Implemented `/player <username> shadow`
             """.trimIndent()
         )
         type = STABLE

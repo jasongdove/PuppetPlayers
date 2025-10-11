@@ -40,11 +40,13 @@ We can make a puppet player join the world using one of the following commands:
 /puppet <username> join
 /puppet <username> spawn
 /puppet <username> spawn at <position> facing <rotation> in <dimension> in <gamemode>
+/puppet <username> shadow
 ```
 - The `join` subcommand spawns the specified puppet at its previous log-off position, this essentially simulates
 as if the player were joining the server themselves.
 - The `spawn` subcommand spawns the specified puppet at either a specified position or the position of the
 command executor if the position is not specified.
+- The `shadow` subcommand makes a puppet player join in the place of a currently online player.
 
 Once a player has joined the world, we can make the player leave by running the following command:
 ```
@@ -133,7 +135,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("me.senseiwells:puppet-players:1.1.1-beta.1+1.21.9")
+    modImplementation("me.senseiwells:puppet-players:1.2.0+1.21.9")
 }
 ```
 

@@ -15,9 +15,12 @@ import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import me.senseiwells.puppet.utils.PuppetPlayerRegistries
 import net.casual.arcade.commands.*
 import net.casual.arcade.npc.FakePlayer
+import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.MathUtils.component1
 import net.casual.arcade.utils.MathUtils.component2
 import net.casual.arcade.utils.MathUtils.component3
+import net.casual.arcade.utils.PlayerUtils.username
+import net.casual.arcade.utils.TimeUtils.Ticks
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.SharedSuggestionProvider
@@ -29,6 +32,8 @@ import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.commands.arguments.selector.EntitySelectorParser
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.players.PlayerList
 import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
@@ -37,6 +42,9 @@ import java.util.concurrent.CompletableFuture
 object PuppetPlayerCommand: CommandTree {
     private val FAKE_PLAYERS_ONLY = SimpleCommandExceptionType(
         Component.literal("Only puppet players may be affected by this command")
+    )
+    private val REAL_PLAYERS_ONLY = SimpleCommandExceptionType(
+        Component.literal("Only real players may be affected by this command")
     )
     private val PLAYER_ALREADY_ONLINE = SimpleCommandExceptionType(
         Component.literal("Player is already online")
@@ -87,6 +95,10 @@ object PuppetPlayerCommand: CommandTree {
     }
 
     private fun addCommonCommandTree(builder: ArgumentBuilder<CommandSourceStack, *>) {
+        builder.literal("shadow") {
+            executes(::shadowRealPlayer)
+        }
+
         builder.literal("leave") {
             executes(::fakePlayerLeave)
         }
@@ -146,8 +158,8 @@ object PuppetPlayerCommand: CommandTree {
         runCatching(parser::parse)
         return parser.fillSuggestions(builder) {
             val names = context.source.server.playerList.players
-                .filterIsInstance<PuppetPlayer>()
-                .map { player -> player.scoreboardName }
+                // .filterIsInstance<PuppetPlayer>()
+                .map { player -> player.username }
             SharedSuggestionProvider.suggest(names, it)
         }
     }
@@ -178,6 +190,14 @@ object PuppetPlayerCommand: CommandTree {
         return context.source.success("Puppet player is spawning...")
     }
 
+    private fun shadowRealPlayer(context: CommandContext<CommandSourceStack>) {
+        val player = this.getRealPlayerOrThrow(context)
+        player.connection.disconnect(PlayerList.DUPLICATE_LOGIN_DISCONNECT_MESSAGE)
+        GlobalTickedScheduler.schedule(1.Ticks) {
+            FakePlayer.join(context.source.server, player.gameProfile, ::PuppetPlayer)
+        }
+    }
+
     private fun fakePlayerLeave(context: CommandContext<CommandSourceStack>): Int {
         val player = this.getFakePlayerOrThrow(context)
         player.connection.disconnect(Component.literal("Removed via command"))
@@ -199,7 +219,6 @@ object PuppetPlayerCommand: CommandTree {
         return FakePlayer.join(context.source.server, username, ::PuppetPlayer).whenComplete { _, throwable ->
             if (throwable != null) {
                 context.source.fail("Puppet player $username failed to join, see logs for more info")
-                PuppetPlayers.logger.error("Puppet player $username failed to join", throwable)
             }
         }
     }
@@ -259,15 +278,27 @@ object PuppetPlayerCommand: CommandTree {
     }
 
     private fun getFakePlayerOrThrow(context: CommandContext<CommandSourceStack>): PuppetPlayer {
-        val player = if (context.hasArgument("username")) {
+        val player = this.getPlayerOrThrow(context)
+        if (player !is PuppetPlayer) {
+            throw FAKE_PLAYERS_ONLY.create()
+        }
+        return player
+    }
+
+    private fun getRealPlayerOrThrow(context: CommandContext<CommandSourceStack>): ServerPlayer {
+        val player = this.getPlayerOrThrow(context)
+        if (player == null || player::class.java != ServerPlayer::class.java) {
+            throw REAL_PLAYERS_ONLY.create()
+        }
+        return player
+    }
+
+    private fun getPlayerOrThrow(context: CommandContext<CommandSourceStack>): ServerPlayer? {
+        return if (context.hasArgument("username")) {
             val username = UsernameArgument.getUsername(context, "username")
             context.source.server.playerList.getPlayerByName(username)
         } else {
             EntityArgument.getPlayer(context, "player")
         }
-        if (player !is PuppetPlayer) {
-            throw FAKE_PLAYERS_ONLY.create()
-        }
-        return player
     }
 }

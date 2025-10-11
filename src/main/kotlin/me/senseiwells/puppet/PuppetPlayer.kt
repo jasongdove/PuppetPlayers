@@ -9,6 +9,7 @@ import net.casual.arcade.utils.PlayerUtils.levelServer
 import net.minecraft.network.Connection
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask
+import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.world.level.storage.ValueInput
@@ -19,8 +20,9 @@ import kotlin.jvm.optionals.getOrNull
 class PuppetPlayer @Internal constructor(
     server: MinecraftServer,
     level: ServerLevel,
-    profile: GameProfile
-): FakePlayer(server, level, profile) {
+    profile: GameProfile,
+    info: ClientInformation
+): FakePlayer(server, level, profile, info) {
     val actions = PuppetPlayerActions(this)
 
     override fun createConnection(
@@ -31,8 +33,13 @@ class PuppetPlayer @Internal constructor(
         return PuppetGamePacketListenerImpl(server, connection, this, cookie)
     }
 
-    override fun createRespawned(server: MinecraftServer, level: ServerLevel, profile: GameProfile): FakePlayer {
-        return PuppetPlayer(server, level, profile)
+    override fun createRespawned(
+        server: MinecraftServer,
+        level: ServerLevel,
+        profile: GameProfile,
+        info: ClientInformation
+    ): PuppetPlayer {
+        return PuppetPlayer(server, level, profile, info)
     }
 
     override fun connection(): PuppetGamePacketListenerImpl {
