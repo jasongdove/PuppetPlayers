@@ -19,8 +19,7 @@ repositories {
     mavenCentral()
 }
 
-
-val modVersion = "1.2.0"
+val modVersion = "1.2.1"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -75,8 +74,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            - Properly fixed fake player loading
-            - Implemented `/player <username> shadow`
+            - Fix puppets not taking correct knockback when blocking with a shield
             """.trimIndent()
         )
         type = STABLE
