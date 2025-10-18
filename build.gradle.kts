@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val modVersion = "1.2.1"
+val modVersion = "1.2.2"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -74,7 +74,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            - Fix puppets not taking correct knockback when blocking with a shield
+            - Fix puppets being disconnected when reloading the whitelist with enforce-whitelist enabled
             """.trimIndent()
         )
         type = STABLE

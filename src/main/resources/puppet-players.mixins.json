@@ -6,6 +6,7 @@
   "mixins": [
     "CachedUserNameToIdResolverAccessor",
     "InteractionHandlerMixin",
+    "MinecraftServerMixin",
     "ServerGamePacketListenerImplMixin",
     "ServicesAccessor"
   ],
