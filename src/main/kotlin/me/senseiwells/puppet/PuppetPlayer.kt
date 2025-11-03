@@ -5,6 +5,7 @@ import me.senseiwells.puppet.action.PuppetPlayerActions
 import me.senseiwells.puppet.network.PuppetGamePacketListenerImpl
 import net.casual.arcade.npc.FakePlayer
 import net.casual.arcade.npc.network.FakeGamePacketListenerImpl
+import net.casual.arcade.npc.utils.AttributeUtils.toBuilder
 import net.casual.arcade.utils.PlayerUtils.levelServer
 import net.minecraft.network.Connection
 import net.minecraft.server.MinecraftServer
@@ -12,6 +13,8 @@ import net.minecraft.server.TickTask
 import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.network.CommonListenerCookie
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.level.storage.ValueOutput
 import org.jetbrains.annotations.ApiStatus.Internal
@@ -40,6 +43,12 @@ class PuppetPlayer @Internal constructor(
         info: ClientInformation
     ): PuppetPlayer {
         return PuppetPlayer(server, level, profile, info)
+    }
+
+    override fun createAttributeSupplier(): AttributeSupplier {
+        return super.createAttributeSupplier().toBuilder()
+            .add(Attributes.FOLLOW_RANGE)
+            .build()
     }
 
     override fun connection(): PuppetGamePacketListenerImpl {
