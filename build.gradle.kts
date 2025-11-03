@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val modVersion = "1.2.2"
+val modVersion = "1.2.3"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -74,7 +74,8 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            - Fix puppets being disconnected when reloading the whitelist with enforce-whitelist enabled
+            - Fix chained actions not being serialized properly
+            - Give puppets the `minecraft:follow_range` attribute to determine pathfinding distance
             """.trimIndent()
         )
         type = STABLE
