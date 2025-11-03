@@ -396,7 +396,7 @@ class PuppetPlayerActions(
             this.usingHeld,
             this.loop,
             this.action,
-            this.actions
+            this.chained
         )
     }
 
