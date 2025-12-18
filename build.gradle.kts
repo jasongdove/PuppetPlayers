@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val modVersion = "1.2.3"
+val modVersion = "1.3.0"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -74,8 +74,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            - Fix chained actions not being serialized properly
-            - Give puppets the `minecraft:follow_range` attribute to determine pathfinding distance
+            - Update to 1.21.11
             """.trimIndent()
         )
         type = STABLE

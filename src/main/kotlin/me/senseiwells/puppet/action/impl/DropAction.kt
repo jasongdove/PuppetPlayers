@@ -12,7 +12,7 @@ import me.senseiwells.puppet.action.PuppetPlayerAction
 import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class DropAction(private val dropEntireStack: Boolean = false): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
@@ -27,7 +27,7 @@ class DropAction(private val dropEntireStack: Boolean = false): PuppetPlayerActi
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("drop")
+        override val ID: Identifier = Identifier.withDefaultNamespace("drop")
 
         override val CODEC: MapCodec<out DropAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

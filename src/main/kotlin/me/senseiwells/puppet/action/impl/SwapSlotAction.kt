@@ -13,7 +13,7 @@ import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.SharedSuggestionProvider
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class SwapSlotAction(private val slot: Int): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
@@ -26,7 +26,7 @@ class SwapSlotAction(private val slot: Int): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("swap_slot")
+        override val ID: Identifier = Identifier.withDefaultNamespace("swap_slot")
 
         override val CODEC: MapCodec<out SwapSlotAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

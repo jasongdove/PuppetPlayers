@@ -8,10 +8,10 @@ import me.senseiwells.puppet.PuppetPlayer
 import me.senseiwells.puppet.action.PuppetPlayerAction
 import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 object InterruptMoveToAction: PuppetPlayerAction, PuppetPlayerActionProvider {
-    override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("interrupt_move_to")
+    override val ID: Identifier = Identifier.withDefaultNamespace("interrupt_move_to")
 
     override val CODEC: MapCodec<out PuppetPlayerAction> = MapCodec.unit(this)
 

@@ -12,7 +12,7 @@ import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.casual.arcade.commands.arguments.EnumArgument
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class AttackAction(private val type: ActionModifier): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
@@ -36,7 +36,7 @@ class AttackAction(private val type: ActionModifier): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("attack")
+        override val ID: Identifier = Identifier.withDefaultNamespace("attack")
 
         override val CODEC: MapCodec<out AttackAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

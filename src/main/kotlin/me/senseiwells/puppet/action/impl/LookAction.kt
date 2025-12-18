@@ -9,11 +9,11 @@ import me.senseiwells.puppet.PuppetPlayer
 import me.senseiwells.puppet.action.PuppetPlayerAction
 import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
-import net.casual.arcade.utils.codec.ArcadeExtraCodecs
+import net.casual.arcade.utils.serialization.codec.ArcadeExtraCodecs
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.coordinates.RotationArgument
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.phys.Vec2
 
 class LookAction(private val rotation: Vec2): PuppetPlayerAction {
@@ -29,7 +29,7 @@ class LookAction(private val rotation: Vec2): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("look")
+        override val ID: Identifier = Identifier.withDefaultNamespace("look")
 
         override val CODEC: MapCodec<out LookAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

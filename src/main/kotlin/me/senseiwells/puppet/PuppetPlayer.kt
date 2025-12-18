@@ -6,7 +6,7 @@ import me.senseiwells.puppet.network.PuppetGamePacketListenerImpl
 import net.casual.arcade.npc.FakePlayer
 import net.casual.arcade.npc.network.FakeGamePacketListenerImpl
 import net.casual.arcade.npc.utils.AttributeUtils.toBuilder
-import net.casual.arcade.utils.PlayerUtils.levelServer
+import net.casual.arcade.utils.PlayerUtils.server
 import net.minecraft.network.Connection
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask
@@ -58,7 +58,7 @@ class PuppetPlayer @Internal constructor(
     override fun tick() {
         super.tick()
 
-        this.levelServer.schedule(TickTask(this.levelServer.tickCount) {
+        this.server.schedule(TickTask(this.server.tickCount) {
             // All player actions should be handled in the packet phase
             this.actions.tick()
         })

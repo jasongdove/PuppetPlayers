@@ -33,6 +33,7 @@ import net.minecraft.commands.arguments.selector.EntitySelectorParser
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.permissions.PermissionLevel
 import net.minecraft.server.players.PlayerList
 import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec2
@@ -55,7 +56,7 @@ object PuppetPlayerCommand: CommandTree {
 
     override fun create(buildContext: CommandBuildContext): LiteralArgumentBuilder<CommandSourceStack> {
         return CommandTree.buildLiteral("puppet") {
-            requires { it.hasPermission(2) || !PuppetPlayers.config.operatorRequiredForPuppets }
+            requires { it.hasPermission(PermissionLevel.GAMEMASTERS) || !PuppetPlayers.config.operatorRequiredForPuppets }
 
             argument("username", UsernameArgument.username()) {
                 literal("join") {
@@ -154,7 +155,7 @@ object PuppetPlayerCommand: CommandTree {
     ): CompletableFuture<Suggestions> {
         val reader = StringReader(builder.input)
         reader.cursor = builder.start
-        val parser = EntitySelectorParser(reader, context.source.hasPermission(2))
+        val parser = EntitySelectorParser(reader, context.source.hasPermission(PermissionLevel.GAMEMASTERS))
         runCatching(parser::parse)
         return parser.fillSuggestions(builder) {
             val names = context.source.server.playerList.players

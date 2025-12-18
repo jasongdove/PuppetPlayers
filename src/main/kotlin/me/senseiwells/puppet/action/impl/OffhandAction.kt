@@ -12,10 +12,10 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket.Action
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 object OffhandAction: PuppetPlayerAction, PuppetPlayerActionProvider {
-    override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("offhand")
+    override val ID: Identifier = Identifier.withDefaultNamespace("offhand")
 
     override val CODEC: MapCodec<out OffhandAction> = MapCodec.unit(this)
 

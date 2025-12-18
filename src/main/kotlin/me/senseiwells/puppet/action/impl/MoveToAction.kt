@@ -18,7 +18,7 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.core.UUIDUtil
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.phys.Vec3
 import java.util.*
 
@@ -98,7 +98,7 @@ sealed class MoveToAction(
             ).apply(instance, ::MoveToEntityAction)
         }
 
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("move_to")
+        override val ID: Identifier = Identifier.withDefaultNamespace("move_to")
 
         override val CODEC: MapCodec<out MoveToAction> = Codec.mapEither(POSITION_CODEC, ENTITY_CODEC).xmap(
             { either -> either.map({ it }, { it }) },

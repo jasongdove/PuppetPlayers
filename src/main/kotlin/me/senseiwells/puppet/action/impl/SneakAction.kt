@@ -12,7 +12,7 @@ import me.senseiwells.puppet.action.PuppetPlayerAction
 import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class SneakAction(private val sneaking: Boolean): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
@@ -25,7 +25,7 @@ class SneakAction(private val sneaking: Boolean): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("sneak")
+        override val ID: Identifier = Identifier.withDefaultNamespace("sneak")
 
         override val CODEC: MapCodec<out SneakAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

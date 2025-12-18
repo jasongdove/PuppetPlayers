@@ -12,7 +12,7 @@ import me.senseiwells.puppet.action.PuppetPlayerAction
 import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class SprintAction(private val sprinting: Boolean): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
@@ -25,7 +25,7 @@ class SprintAction(private val sprinting: Boolean): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("sprint")
+        override val ID: Identifier = Identifier.withDefaultNamespace("sprint")
 
         override val CODEC: MapCodec<out SprintAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

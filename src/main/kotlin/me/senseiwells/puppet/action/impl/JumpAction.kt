@@ -12,7 +12,7 @@ import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.casual.arcade.commands.arguments.EnumArgument
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class JumpAction(private val type: ActionModifier): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
@@ -29,7 +29,7 @@ class JumpAction(private val type: ActionModifier): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("jump")
+        override val ID: Identifier = Identifier.withDefaultNamespace("jump")
 
         override val CODEC: MapCodec<out JumpAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(

@@ -15,7 +15,7 @@ import net.casual.arcade.utils.TimeUtils.Ticks
 import net.casual.arcade.utils.time.MinecraftTimeDuration
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.TimeArgument
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class DelayAction(
     private val delay: MinecraftTimeDuration,
@@ -34,7 +34,7 @@ class DelayAction(
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: ResourceLocation = ResourceLocation.withDefaultNamespace("delay")
+        override val ID: Identifier = Identifier.withDefaultNamespace("delay")
 
         override val CODEC: MapCodec<out DelayAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
