@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec2
 
 class LookAction(private val rotation: Vec2): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
-        player.connection.send(
+        player.connection.handleMovePlayer(
             ServerboundMovePlayerPacket.Rot(this.rotation.y, this.rotation.x, player.onGround(), player.horizontalCollision)
         )
         return PuppetPlayerAction.Result.Complete
