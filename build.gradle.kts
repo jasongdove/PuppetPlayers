@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val modVersion = "1.3.1"
+val modVersion = "1.3.2"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -74,7 +74,7 @@ tasks {
         file = remapJar.get().archiveFile
         changelog.set(
             """
-            - Fix the look action not working properly
+            - Update dependencies
             """.trimIndent()
         )
         type = STABLE
