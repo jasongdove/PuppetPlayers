@@ -36,9 +36,9 @@ class UseAction(private val type: ActionModifier): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("use")
+        override val id: Identifier = Identifier.withDefaultNamespace("use")
 
-        override val CODEC: MapCodec<out UseAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out UseAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 ActionModifier.CODEC.fieldOf("modifier").forGetter(UseAction::type)
             ).apply(instance, ::UseAction)

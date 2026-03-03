@@ -26,9 +26,9 @@ class SwapSlotAction(private val slot: Int): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("swap_slot")
+        override val id: Identifier = Identifier.withDefaultNamespace("swap_slot")
 
-        override val CODEC: MapCodec<out SwapSlotAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out SwapSlotAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.intRange(0, 8).fieldOf("slot").forGetter(SwapSlotAction::slot)
             ).apply(instance, ::SwapSlotAction)

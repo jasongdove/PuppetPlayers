@@ -98,9 +98,9 @@ sealed class MoveToAction(
             ).apply(instance, ::MoveToEntityAction)
         }
 
-        override val ID: Identifier = Identifier.withDefaultNamespace("move_to")
+        override val id: Identifier = Identifier.withDefaultNamespace("move_to")
 
-        override val CODEC: MapCodec<out MoveToAction> = Codec.mapEither(POSITION_CODEC, ENTITY_CODEC).xmap(
+        override val codec: MapCodec<out MoveToAction> = Codec.mapEither(POSITION_CODEC, ENTITY_CODEC).xmap(
             { either -> either.map({ it }, { it }) },
             { action -> if (action is MoveToPositionAction) Either.left(action) else Either.right(action as MoveToEntityAction) }
         )

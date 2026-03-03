@@ -29,9 +29,9 @@ class LookAction(private val rotation: Vec2): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("look")
+        override val id: Identifier = Identifier.withDefaultNamespace("look")
 
-        override val CODEC: MapCodec<out LookAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out LookAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 ArcadeExtraCodecs.VEC2.fieldOf("rotation").forGetter(LookAction::rotation)
             ).apply(instance, ::LookAction)

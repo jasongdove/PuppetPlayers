@@ -34,9 +34,9 @@ class DelayAction(
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("delay")
+        override val id: Identifier = Identifier.withDefaultNamespace("delay")
 
-        override val CODEC: MapCodec<out DelayAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out DelayAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 MinecraftTimeDuration.CODEC.fieldOf("delay").forGetter(DelayAction::delay),
                 Codec.INT.fieldOf("ticks").forGetter(DelayAction::ticks)

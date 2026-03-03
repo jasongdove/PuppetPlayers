@@ -135,7 +135,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("me.senseiwells:puppet-players:1.3.3-beta.1+1.21.11")
+    modImplementation("me.senseiwells:puppet-players:1.4.0+1.21.11")
 }
 ```
 

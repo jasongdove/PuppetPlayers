@@ -15,9 +15,9 @@ import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket.Action
 import net.minecraft.resources.Identifier
 
 object OffhandAction: PuppetPlayerAction, PuppetPlayerActionProvider {
-    override val ID: Identifier = Identifier.withDefaultNamespace("offhand")
+    override val id: Identifier = Identifier.withDefaultNamespace("offhand")
 
-    override val CODEC: MapCodec<out OffhandAction> = MapCodec.unit(this)
+    override val codec: MapCodec<out OffhandAction> = MapCodec.unit(this)
 
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
         player.connection.handlePlayerAction(

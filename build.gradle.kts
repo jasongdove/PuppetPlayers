@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val modVersion = "1.3.3-beta.1"
+val modVersion = "1.4.0"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"

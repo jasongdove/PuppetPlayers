@@ -29,9 +29,9 @@ class JumpAction(private val type: ActionModifier): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("jump")
+        override val id: Identifier = Identifier.withDefaultNamespace("jump")
 
-        override val CODEC: MapCodec<out JumpAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out JumpAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 ActionModifier.CODEC.fieldOf("modifier").forGetter(JumpAction::type)
             ).apply(instance, ::JumpAction)

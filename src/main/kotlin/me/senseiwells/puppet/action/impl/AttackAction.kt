@@ -36,9 +36,9 @@ class AttackAction(private val type: ActionModifier): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("attack")
+        override val id: Identifier = Identifier.withDefaultNamespace("attack")
 
-        override val CODEC: MapCodec<out AttackAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out AttackAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 ActionModifier.CODEC.fieldOf("modifier").forGetter(AttackAction::type)
             ).apply(instance, ::AttackAction)

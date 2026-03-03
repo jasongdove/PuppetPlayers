@@ -10,7 +10,7 @@ import net.minecraft.core.Registry
 
 /**
  * This interface provides methods for creating
- * [PuppetPlayerAction]s through commands and [CODEC]s.
+ * [PuppetPlayerAction]s through commands and [codec]s.
  *
  * Implementations of this interface should be registered
  * to the [PuppetPlayerRegistries.ACTION_PROVIDERS].
@@ -53,7 +53,7 @@ interface PuppetPlayerActionProvider: CodecProvider<PuppetPlayerAction> {
          * @param registry The registry to register to.
          */
         fun PuppetPlayerActionProvider.register(registry: Registry<PuppetPlayerActionProvider>) {
-            Registry.register(registry, this.ID, this)
+            Registry.register(registry, this.id, this)
         }
     }
 }

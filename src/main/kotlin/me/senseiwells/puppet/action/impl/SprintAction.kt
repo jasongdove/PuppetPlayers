@@ -25,9 +25,9 @@ class SprintAction(private val sprinting: Boolean): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("sprint")
+        override val id: Identifier = Identifier.withDefaultNamespace("sprint")
 
-        override val CODEC: MapCodec<out SprintAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out SprintAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.BOOL.fieldOf("sprinting").forGetter(SprintAction::sprinting)
             ).apply(instance, ::SprintAction)

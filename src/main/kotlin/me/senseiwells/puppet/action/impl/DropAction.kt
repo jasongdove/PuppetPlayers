@@ -27,9 +27,9 @@ class DropAction(private val dropEntireStack: Boolean = false): PuppetPlayerActi
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("drop")
+        override val id: Identifier = Identifier.withDefaultNamespace("drop")
 
-        override val CODEC: MapCodec<out DropAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out DropAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.BOOL.fieldOf("drop_entire_stack").forGetter(DropAction::dropEntireStack)
             ).apply(instance, ::DropAction)

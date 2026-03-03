@@ -11,9 +11,9 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.resources.Identifier
 
 object InterruptMoveToAction: PuppetPlayerAction, PuppetPlayerActionProvider {
-    override val ID: Identifier = Identifier.withDefaultNamespace("interrupt_move_to")
+    override val id: Identifier = Identifier.withDefaultNamespace("interrupt_move_to")
 
-    override val CODEC: MapCodec<out PuppetPlayerAction> = MapCodec.unit(this)
+    override val codec: MapCodec<out PuppetPlayerAction> = MapCodec.unit(this)
 
     override val immediate: Boolean get() = true
 

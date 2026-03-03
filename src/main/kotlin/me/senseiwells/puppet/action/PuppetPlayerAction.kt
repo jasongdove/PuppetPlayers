@@ -47,7 +47,7 @@ interface PuppetPlayerAction {
     companion object {
         val CODEC: Codec<PuppetPlayerAction> = Codec.lazyInitialized {
             PuppetPlayerRegistries.ACTION_PROVIDERS.byNameCodec()
-                .dispatch(PuppetPlayerAction::provider, PuppetPlayerActionProvider::CODEC)
+                .dispatch(PuppetPlayerAction::provider, PuppetPlayerActionProvider::codec)
         }
 
         internal fun bootstrap(registry: Registry<PuppetPlayerActionProvider>) {

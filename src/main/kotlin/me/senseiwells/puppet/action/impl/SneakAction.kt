@@ -25,9 +25,9 @@ class SneakAction(private val sneaking: Boolean): PuppetPlayerAction {
     }
 
     companion object: PuppetPlayerActionProvider {
-        override val ID: Identifier = Identifier.withDefaultNamespace("sneak")
+        override val id: Identifier = Identifier.withDefaultNamespace("sneak")
 
-        override val CODEC: MapCodec<out SneakAction> = RecordCodecBuilder.mapCodec { instance ->
+        override val codec: MapCodec<out SneakAction> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.BOOL.fieldOf("sneaking").forGetter(SneakAction::sneaking)
             ).apply(instance, ::SneakAction)

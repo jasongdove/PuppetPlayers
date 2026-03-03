@@ -6,7 +6,7 @@ import me.senseiwells.puppet.network.PuppetGamePacketListenerImpl
 import net.casual.arcade.npc.FakePlayer
 import net.casual.arcade.npc.network.FakeGamePacketListenerImpl
 import net.casual.arcade.npc.utils.AttributeUtils.toBuilder
-import net.casual.arcade.utils.PlayerUtils.server
+import net.casual.arcade.utils.player.server
 import net.minecraft.network.Connection
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask

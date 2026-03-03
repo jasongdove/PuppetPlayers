@@ -19,8 +19,8 @@ import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.MathUtils.component1
 import net.casual.arcade.utils.MathUtils.component2
 import net.casual.arcade.utils.MathUtils.component3
-import net.casual.arcade.utils.PlayerUtils.username
 import net.casual.arcade.utils.TimeUtils.Ticks
+import net.casual.arcade.utils.player.username
 import net.minecraft.commands.CommandBuildContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.SharedSuggestionProvider
@@ -108,7 +108,7 @@ object PuppetPlayerCommand: CommandTree {
             literal("run") {
                 for (provider in PuppetPlayerRegistries.ACTION_PROVIDERS) {
                     if (provider.canRunAction) {
-                        literal(provider.ID.toString()) {
+                        literal(provider.id.toString()) {
                             provider.addCommandArguments(this) { context ->
                                 runAction(context, provider)
                             }
@@ -120,7 +120,7 @@ object PuppetPlayerCommand: CommandTree {
                 literal("add") {
                     for (provider in PuppetPlayerRegistries.ACTION_PROVIDERS) {
                         if (provider.canChainAction) {
-                            literal(provider.ID.toString()) {
+                            literal(provider.id.toString()) {
                                 provider.addCommandArguments(this) { context ->
                                     addAction(context, provider)
                                 }
@@ -228,14 +228,14 @@ object PuppetPlayerCommand: CommandTree {
         val player = this.getFakePlayerOrThrow(context)
         val action = provider.createCommandAction(context)
         player.actions.run(action)
-        return context.source.success("Successfully ran action '${provider.ID}'")
+        return context.source.success("Successfully ran action '${provider.id}'")
     }
 
     private fun addAction(context: CommandContext<CommandSourceStack>, provider: PuppetPlayerActionProvider): Int {
         val player = this.getFakePlayerOrThrow(context)
         val action = provider.createCommandAction(context)
         player.actions.chain(action)
-        return context.source.success("Successfully added '${provider.ID}' action")
+        return context.source.success("Successfully added '${provider.id}' action")
     }
 
     private fun loopActions(context: CommandContext<CommandSourceStack>): Int {
