@@ -67,6 +67,7 @@ Here is a list of all available actions:
 | `"minecraft:interrupt_move_to"` | Interrupts the players current pathfinding.          | None                                                                      | Yes               |
 | `"minecraft:jump"`              | Makes the player jump.                               | `<once\|hold\|release>`                                                   | Yes               |
 | `"minecraft:look"`              | Makes the player look in a direction.                | `<rotation>`                                                              | Yes               |
+| `"minecraft:look_at"`           | Makes the player look towards the specified target.  | `<target> <anchor?>`                                                      | Yes               |
 | `"minecraft:move_to"`           | Makes the player pathfind to a position or entity.   | `position <pos> <sprint?> <jump?>` or `entity <entity> <sprint?> <jump?>` | Yes               |
 | `"minecraft:offhand"`           | Makes the player swap their item with their offhand. | None                                                                      | Yes               |
 | `"minecraft:sneak"`             | Makes the player sneak.                              | `<sneaking>`                                                              | Yes               |
@@ -115,10 +116,14 @@ The config is located in `./config/puppet-player-config.json` and by default sho
 ```json
 {
   "reload_puppet_players": true,
+  "respawn_puppet_players": true,
+  "puppet_player_death_delay": 0,
   "operator_required_for_puppets": true
 }
 ```
-- `"reload_puppet_players"` - Whether to respawn puppets if the server stopped with them last online
+- `"reload_puppet_players"` - Whether puppets will rejoin if the server stopped with them last online
+- `"respawn_puppet_players"` - Whether to respawn puppets after they die, if disabled they will leave the game instead
+- `"puppet_player_death_delay""` - The delay after the puppet dies to either respawn/leave (determined by `respawn_puppet_players`)
 - `"operator_required_for_puppets"` - Whether players need operator permissions to run the `/puppet` command
 
 ### Developers
