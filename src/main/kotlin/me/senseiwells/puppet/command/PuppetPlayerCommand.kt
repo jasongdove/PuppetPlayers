@@ -182,7 +182,7 @@ object PuppetPlayerCommand: CommandTree {
         this.addFakePlayerOrThrow(context, username).thenApply { player ->
             val level = dimension ?: player.level()
             val (x, y, z) = position
-            val (yRot, xRot) = rotation ?: player.rotationVector
+            val (xRot, yRot) = rotation ?: player.rotationVector
             if (gamemode != null) {
                 player.gameMode.changeGameModeForPlayer(gamemode)
             }

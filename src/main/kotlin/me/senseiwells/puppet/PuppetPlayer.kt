@@ -6,8 +6,10 @@ import me.senseiwells.puppet.network.PuppetGamePacketListenerImpl
 import net.casual.arcade.npc.FakePlayer
 import net.casual.arcade.npc.network.FakeGamePacketListenerImpl
 import net.casual.arcade.npc.utils.AttributeUtils.toBuilder
+import net.casual.arcade.scheduler.GlobalTickedScheduler
 import net.casual.arcade.utils.player.server
 import net.minecraft.network.Connection
+import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.TickTask
 import net.minecraft.server.level.ClientInformation
@@ -75,5 +77,14 @@ class PuppetPlayer @Internal constructor(
     override fun addAdditionalSaveData(output: ValueOutput) {
         super.addAdditionalSaveData(output)
         output.store("fake_actions", PuppetPlayerActions.Packed.CODEC, this.actions.pack())
+    }
+
+    override fun tryRespawnAfterDeath() {
+        if (this.deathTime > PuppetPlayers.config.puppetPlayerDeathDelay.ticks) {
+            super.tryRespawnAfterDeath()
+            if (!PuppetPlayers.config.respawnPuppetPlayers) {
+                this.connection.disconnect(Component.literal("Killed"))
+            }
+        }
     }
 }
