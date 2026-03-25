@@ -12,37 +12,32 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     maven("https://maven.parchmentmc.org/")
     maven("https://maven.supersanta.me/snapshots")
     maven("https://api.modrinth.com/maven")
     mavenCentral()
+    mavenLocal()
 }
 
-val modVersion = "1.5.0-beta.1"
+val modVersion = "1.5.0"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
 
 dependencies {
     minecraft(libs.minecraft)
-    @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.get()}@zip")
-    })
 
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
-    modImplementation(libs.fabric.kotlin)
+    implementation(libs.fabric.loader)
+    implementation(libs.fabric.api)
+    implementation(libs.fabric.kotlin)
 
-    include(modImplementation(libs.arcade.commands.get())!!)
+    include(implementation(libs.arcade.commands.get())!!)
 
-    include(modApi(libs.arcade.npcs.get())!!)
-    include(modImplementation(libs.arcade.event.registry.get())!!)
-    include(modImplementation(libs.arcade.events.server.get())!!)
-    include(modImplementation(libs.arcade.scheduler.get())!!)
-    include(modImplementation(libs.arcade.utils.get())!!)
+    include(api(libs.arcade.npcs.get())!!)
+    include(implementation(libs.arcade.event.registry.get())!!)
+    include(implementation(libs.arcade.events.server.get())!!)
+    include(implementation(libs.arcade.scheduler.get())!!)
+    include(implementation(libs.arcade.utils.get())!!)
 }
 
 loom {
@@ -65,16 +60,22 @@ tasks {
     processResources {
         inputs.property("version", modVersion)
         filesMatching("fabric.mod.json") {
-            expand(mutableMapOf("version" to modVersion))
+            expand(mutableMapOf(
+                "version" to modVersion,
+                "fabric_loader_dependency" to libs.versions.fabric.loader.get(),
+                "fabric_kotlin_dependency" to libs.versions.fabric.kotlin.get(),
+                "minecraft_dependency" to libs.versions.minecraft.get(),
+            ))
         }
     }
 
 
     publishMods {
-        file = remapJar.get().archiveFile
+        file = jar.get().archiveFile
         changelog.set(
             """
-            - Update dependencies
+            - Update to 26.1
+            - Added `look_at` and `interupt_look_at` actions
             """.trimIndent()
         )
         type = STABLE

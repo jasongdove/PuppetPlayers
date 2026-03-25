@@ -64,10 +64,11 @@ Here is a list of all available actions:
 | `"minecraft:attack"`            | Makes the player attack (left click).                | `<once\|hold\|release>`                                                   | Yes               |
 | `"minecraft:delay"`             | Adds a delay between chained actions.                | `<delay>`                                                                 | No                |
 | `"minecraft:drop"`              | Makes the player drop their selected item.           | `<entire_stack>`                                                          | Yes               |
+| `"minecraft:interrupt_look_at"` | Interrupts the current look at target.               | None                                                                      | Yes               |
 | `"minecraft:interrupt_move_to"` | Interrupts the players current pathfinding.          | None                                                                      | Yes               |
 | `"minecraft:jump"`              | Makes the player jump.                               | `<once\|hold\|release>`                                                   | Yes               |
 | `"minecraft:look"`              | Makes the player look in a direction.                | `<rotation>`                                                              | Yes               |
-| `"minecraft:look_at"`           | Makes the player look towards the specified target.  | `<target> <anchor?>`                                                      | Yes               |
+| `"minecraft:look_at"`           | Makes the player look towards the specified target.  | `position <pos> <lock?>` or `entity <entity> <lock?>`                     | Yes               |
 | `"minecraft:move_to"`           | Makes the player pathfind to a position or entity.   | `position <pos> <sprint?> <jump?>` or `entity <entity> <sprint?> <jump?>` | Yes               |
 | `"minecraft:offhand"`           | Makes the player swap their item with their offhand. | None                                                                      | Yes               |
 | `"minecraft:sneak"`             | Makes the player sneak.                              | `<sneaking>`                                                              | Yes               |
@@ -140,7 +141,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("me.senseiwells:puppet-players:1.4.0+1.21.11")
+    implementation("me.senseiwells:puppet-players:1.5.0+26.1")
 }
 ```
 

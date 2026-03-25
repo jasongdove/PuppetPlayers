@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.senseiwells.puppet.PuppetPlayer
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket.Action
@@ -156,17 +157,44 @@ class PuppetPlayerActions(
         if (this.missTime > 0) {
             return false
         }
+
+        if (this.player.isSpectator) {
+            val hitResult = this.hitResult
+            if (hitResult is EntityHitResult) {
+                this.handle(ServerboundSpectateEntityPacket(hitResult.entity.id))
+                return true
+            }
+        }
+
+        val heldItem = this.player.getItemInHand(InteractionHand.MAIN_HAND)
+        if (!heldItem.isItemEnabled(this.player.level().enabledFeatures())) {
+            return false
+        }
+        if (this.player.cannotAttackWithItem(heldItem, 0)) {
+            return false
+        }
+
+        val piercingWeapon = heldItem.get(DataComponents.PIERCING_WEAPON)
+        if (piercingWeapon != null) {
+            this.piercingAttack()
+            this.player.swing(InteractionHand.MAIN_HAND)
+            return true
+        }
+
+        var endAttack = false
         when (val hitResult = this.hitResult) {
             is EntityHitResult -> {
-                val target = hitResult.entity
-                this.handle(ServerboundInteractPacket.createAttackPacket(target, this.player.isShiftKeyDown))
+                val range = heldItem.get(DataComponents.ATTACK_RANGE)
+                if (range == null || range.isInRange(this.player, hitResult.location)) {
+                    this.handle(ServerboundAttackPacket(hitResult.entity.id))
+                }
             }
             is BlockHitResult -> {
                 val pos = hitResult.blockPos
                 if (!this.player.level().getBlockState(pos).isAir) {
                     this.startDestroyBlock(pos, hitResult.direction)
                     if (this.player.level().getBlockState(pos).isAir) {
-                        return true
+                        endAttack = true
                     }
                 }
             }
@@ -177,7 +205,7 @@ class PuppetPlayerActions(
             }
         }
         this.player.swing(InteractionHand.MAIN_HAND)
-        return false
+        return endAttack
     }
 
     private fun continueAttack(isLeftClick: Boolean) {
@@ -200,6 +228,10 @@ class PuppetPlayerActions(
         }
     }
 
+    private fun piercingAttack() {
+        this.handle(ServerboundPlayerActionPacket(Action.STAB, BlockPos.ZERO, Direction.DOWN))
+    }
+
     private fun startUseItem() {
         if (this.isDestroying) {
             return
@@ -210,15 +242,14 @@ class PuppetPlayerActions(
             val stack = this.player.getItemInHand(hand)
             when (val hitResult = this.hitResult) {
                 is EntityHitResult -> {
-                    var result = this.interactAt(hitResult.entity, hitResult, hand)
-                    if (!result.consumesAction()) {
-                        result = this.interact(hitResult.entity, hand)
-                    }
-                    if (result is InteractionResult.Success) {
-                        if (result.swingSource == InteractionResult.SwingSource.SERVER) {
-                            this.player.swing(hand)
+                    if (this.player.isWithinEntityInteractionRange(hitResult.entity, 0.0)) {
+                        val result = this.interact(hitResult.entity, hitResult, hand)
+                        if (result is InteractionResult.Success) {
+                            if (result.swingSource == InteractionResult.SwingSource.SERVER) {
+                                this.player.swing(hand)
+                            }
+                            return
                         }
-                        return
                     }
                 }
                 is BlockHitResult ->  {
@@ -318,14 +349,9 @@ class PuppetPlayerActions(
         }
     }
 
-    private fun interactAt(target: Entity, hitResult: EntityHitResult, hand: InteractionHand): InteractionResult {
+    private fun interact(target: Entity, hitResult: EntityHitResult, hand: InteractionHand): InteractionResult {
         val delta = hitResult.location.subtract(target.x, target.y, target.z)
-        this.handle(ServerboundInteractPacket.createInteractionPacket(target, this.player.isShiftKeyDown, hand, delta))
-        return this.player.connection().popResult(InteractionResult.FAIL)
-    }
-
-    private fun interact(target: Entity, hand: InteractionHand): InteractionResult {
-        this.handle(ServerboundInteractPacket.createInteractionPacket(target, this.player.isShiftKeyDown, hand))
+        this.handle(ServerboundInteractPacket(target.id, hand, delta, this.player.isShiftKeyDown))
         return this.player.connection().popResult(InteractionResult.FAIL)
     }
 

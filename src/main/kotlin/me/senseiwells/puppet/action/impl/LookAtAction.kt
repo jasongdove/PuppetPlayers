@@ -1,8 +1,11 @@
 package me.senseiwells.puppet.action.impl
 
 import com.mojang.brigadier.Command
+import com.mojang.brigadier.arguments.BoolArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
+import com.mojang.datafixers.util.Either
+import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import me.senseiwells.puppet.PuppetPlayer
@@ -10,56 +13,97 @@ import me.senseiwells.puppet.action.PuppetPlayerAction
 import me.senseiwells.puppet.action.PuppetPlayerActionProvider
 import net.casual.arcade.commands.argument
 import net.casual.arcade.commands.getArgumentOrElse
-import net.casual.arcade.utils.serialization.codec.ArcadeExtraCodecs
+import net.casual.arcade.commands.hasArgument
+import net.casual.arcade.commands.literal
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.arguments.EntityAnchorArgument
+import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.commands.arguments.coordinates.Vec3Argument
 import net.minecraft.resources.Identifier
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityReference
 import net.minecraft.world.phys.Vec3
+import java.util.*
 
-class LookAtAction(
-    private val anchor: EntityAnchorArgument.Anchor,
-    private val target: Vec3
-): PuppetPlayerAction {
+sealed class LookAtAction(private val lock: Boolean): PuppetPlayerAction {
     override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
-        player.lookAt(this.anchor, this.target)
-        return PuppetPlayerAction.Result.Complete
+        return if (this.lock) PuppetPlayerAction.Result.Incomplete else PuppetPlayerAction.Result.Complete
     }
 
     override fun provider(): PuppetPlayerActionProvider {
         return LookAtAction
     }
 
+    private class LookAtPositionAction(lock: Boolean, val target: Vec3): LookAtAction(lock) {
+        override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
+            player.lookControl.setLookAt(this.target)
+            return super.run(player)
+        }
+    }
+
+    private class LookAtEntityAction(lock: Boolean, val target: EntityReference<Entity>): LookAtAction(lock) {
+        override fun run(player: PuppetPlayer): PuppetPlayerAction.Result {
+            val entity = this.target.getEntity(player.level(), Entity::class.java)
+            if (entity != null) {
+                player.lookControl.setLookAt(entity)
+                return super.run(player)
+            }
+            return PuppetPlayerAction.Result.Complete
+        }
+    }
+
     companion object: PuppetPlayerActionProvider {
-        private val ANCHOR_CODEC = ArcadeExtraCodecs.enum<EntityAnchorArgument.Anchor> { it.name.lowercase() }
+        private val POSITION_CODEC = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.BOOL.fieldOf("lock").forGetter(LookAtAction::lock),
+                Vec3.CODEC.fieldOf("target").forGetter(LookAtPositionAction::target)
+            ).apply(instance, ::LookAtPositionAction)
+        }
+
+        private val ENTITY_CODEC = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.BOOL.fieldOf("lock").forGetter(LookAtAction::lock),
+                EntityReference.codec<Entity>().fieldOf("target").forGetter(LookAtEntityAction::target)
+            ).apply(instance, ::LookAtEntityAction)
+        }
 
         override val id: Identifier = Identifier.withDefaultNamespace("look_at")
 
-        override val codec: MapCodec<out LookAtAction> = RecordCodecBuilder.mapCodec { instance ->
-            instance.group(
-                ANCHOR_CODEC.fieldOf("anchor").forGetter(LookAtAction::anchor),
-                Vec3.CODEC.fieldOf("target").forGetter(LookAtAction::target)
-            ).apply(instance, ::LookAtAction)
-        }
+        override val codec: MapCodec<out LookAtAction> = Codec.mapEither(POSITION_CODEC, ENTITY_CODEC).xmap(
+            { either -> either.map({ it }, { it }) },
+            { action -> if (action is LookAtPositionAction) Either.left(action) else Either.right(action as LookAtEntityAction) }
+        )
 
         override fun addCommandArguments(
             builder: LiteralArgumentBuilder<CommandSourceStack>,
             command: Command<CommandSourceStack>
         ) {
-            builder.argument("target", Vec3Argument.vec3()) {
-                executes(command)
-                argument("anchor", EntityAnchorArgument.anchor()) {
+            builder.literal("position") {
+                argument("position", Vec3Argument.vec3()) {
                     executes(command)
+
+                    argument("lock", BoolArgumentType.bool()) {
+                        executes(command)
+                    }
+                }
+            }
+            builder.literal("entity") {
+                argument("entity", EntityArgument.entity()) {
+                    executes(command)
+                    argument("lock", BoolArgumentType.bool()) {
+                        executes(command)
+                    }
                 }
             }
         }
 
         override fun createCommandAction(context: CommandContext<CommandSourceStack>): PuppetPlayerAction {
-            val target = Vec3Argument.getVec3(context, "target")
-            val anchor = context.getArgumentOrElse("anchor", EntityAnchorArgument::getAnchor) {
-                EntityAnchorArgument.Anchor.EYES
+            val lock = context.getArgumentOrElse("lock", BoolArgumentType::getBool) { false }
+            if (context.hasArgument("position")) {
+                val position = Vec3Argument.getVec3(context, "position")
+                return LookAtPositionAction(lock, position)
             }
-            return LookAtAction(anchor, target)
+            val entity = EntityArgument.getEntity(context, "entity")
+            return LookAtEntityAction(lock, EntityReference.of(entity)!!)
         }
     }
 }

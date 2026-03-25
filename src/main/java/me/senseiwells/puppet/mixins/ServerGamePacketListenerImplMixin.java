@@ -10,6 +10,20 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ServerGamePacketListenerImpl.class)
 public class ServerGamePacketListenerImplMixin {
     @ModifyExpressionValue(
+        method = "handleInteract",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/server/level/ServerPlayer;interactOn(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/InteractionResult;"
+        )
+    )
+    private InteractionResult storeInteractResultForFake(InteractionResult original) {
+        if ((Object) this instanceof PuppetGamePacketListenerImpl fake) {
+            fake.pushResult(original);
+        }
+        return original;
+    }
+
+    @ModifyExpressionValue(
         method = "handleUseItemOn",
         at = @At(
             value = "INVOKE",

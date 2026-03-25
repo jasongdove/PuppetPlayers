@@ -48,9 +48,9 @@ object PuppetPlayers: ModInitializer {
                 (services.nameToIdCache as CachedUserNameToIdResolverAccessor).setProfileRepository(repository)
             }
         }
-        GlobalEventHandler.Server.register<ServerSaveEvent> { (server, stopping) ->
-            if (!stopping) {
-                this.saveFakePlayers(server)
+        GlobalEventHandler.Server.register<ServerSaveEvent> { event ->
+            if (event.isRoutine) {
+                this.saveFakePlayers(event.server)
             }
         }
         GlobalEventHandler.Server.register<ServerStopEvent> { (server) ->

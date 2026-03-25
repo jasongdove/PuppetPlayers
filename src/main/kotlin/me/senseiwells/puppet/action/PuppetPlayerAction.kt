@@ -54,6 +54,7 @@ interface PuppetPlayerAction {
             AttackAction.register(registry)
             DelayAction.register(registry)
             DropAction.register(registry)
+            InterruptLookAtAction.register(registry)
             InterruptMoveToAction.register(registry)
             JumpAction.register(registry)
             LookAction.register(registry)
