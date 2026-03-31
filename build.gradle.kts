@@ -19,7 +19,7 @@ repositories {
     mavenLocal()
 }
 
-val modVersion = "1.5.0"
+val modVersion = "1.5.1"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -74,8 +74,7 @@ tasks {
         file = jar.get().archiveFile
         changelog.set(
             """
-            - Update to 26.1
-            - Added `look_at` and `interupt_look_at` actions
+            - Update dependency conditions
             """.trimIndent()
         )
         type = STABLE

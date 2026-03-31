@@ -25,9 +25,9 @@
     "puppet-players.mixins.json"
   ],
   "depends": {
-    "fabricloader": "${fabric_loader_dependency}",
     "fabric-api": "*",
-    "minecraft": "${minecraft_dependency}",
-    "fabric-language-kotlin": "${fabric_kotlin_dependency}"
+    "fabricloader": ">=${fabric_loader_dependency}",
+    "minecraft": "~${minecraft_dependency}",
+    "fabric-language-kotlin": ">=${fabric_kotlin_dependency}"
   }
 }
