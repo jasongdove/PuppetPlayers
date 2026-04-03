@@ -40,7 +40,7 @@ import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import java.util.concurrent.CompletableFuture
 
-object PuppetPlayerCommand: CommandTree {
+object PuppetPlayerCommand: CommandTree<CommandSourceStack> {
     private val FAKE_PLAYERS_ONLY = SimpleCommandExceptionType(
         Component.literal("Only puppet players may be affected by this command")
     )
