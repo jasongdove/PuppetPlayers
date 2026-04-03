@@ -19,7 +19,7 @@ repositories {
     mavenLocal()
 }
 
-val modVersion = "1.5.1"
+val modVersion = "1.5.2"
 val releaseVersion = "${modVersion}+${libs.versions.minecraft.get()}"
 version = releaseVersion
 group = "me.senseiwells"
@@ -64,7 +64,7 @@ tasks {
                 "version" to modVersion,
                 "fabric_loader_dependency" to libs.versions.fabric.loader.get(),
                 "fabric_kotlin_dependency" to libs.versions.fabric.kotlin.get(),
-                "minecraft_dependency" to libs.versions.minecraft.get(),
+                "minecraft_dependency" to "~${libs.versions.minecraft.get()}",
             ))
         }
     }
@@ -74,7 +74,7 @@ tasks {
         file = jar.get().archiveFile
         changelog.set(
             """
-            - Update dependency conditions
+            - Update to support 26.1.x
             """.trimIndent()
         )
         type = STABLE
